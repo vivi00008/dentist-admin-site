@@ -1,5 +1,5 @@
 .App {
-  text-align: center;
+  width: 100%;
 }
 
 .App-logo {
@@ -37,6 +37,12 @@
   }
 }
 
-.bgTest{
-  background-color:#282c34;
+.Navbar{
+  width: 100%;
+  height: auto;
 }
+
+.Content{
+  margin-left: 10%;
+}
+

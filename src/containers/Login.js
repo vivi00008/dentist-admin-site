@@ -3,7 +3,7 @@ import { Grid, TextField, Button, Typography} from "@material-ui/core"
 import { makeStyles } from '@material-ui/core/styles'
 import userApi from '../api/userApi'
 import {UserContext} from '../context/UserContext'
-import { withRouter } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
     root:{
@@ -58,7 +58,7 @@ const Login = (props) => {
     const [password, setPassword] = useState()
 
     const user = useContext(UserContext)
-    const { history } =props
+    const history = useHistory()
 
     const handleUsername = useCallback((text) =>{
         setUsername(text)
@@ -70,7 +70,7 @@ const Login = (props) => {
 
     const doLogin = async () => {
         try {
-            
+            console.log('login')
             const response = await userApi.post(
                 "/login-admin",
                 { username: username, password: password },
@@ -80,14 +80,17 @@ const Login = (props) => {
                     },
                 },
             );
-                
+            console.log(response)
             if (response.data.success) {
                 console.log("success")
                 user.setUser(response.data)
                 user.setIsAuth(true);
                 history.push('/manage-room')
             }
-        } catch (err) {}
+        } catch (err) {
+            console.log(err)
+        }
+        console.log('done')
     };
 
     const classes = useStyles();
@@ -119,4 +122,4 @@ const Login = (props) => {
     )
 }
 
-export default withRouter(Login)
+export default Login

@@ -1,6 +1,9 @@
-import React from 'react';
+import React,{useState} from 'react';
 import { makeStyles, MenuItem, MenuList, Grid } from "@material-ui/core"
-import HomeIcon from '@material-ui/icons/Home';
+import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
+import EventNoteIcon from '@material-ui/icons/EventNote';
+import AirlineSeatFlatAngledIcon from '@material-ui/icons/AirlineSeatFlatAngled';
+import { Link } from 'react-router-dom'
 
 const useStyles = makeStyles({
     sideNav: {
@@ -24,7 +27,7 @@ const useStyles = makeStyles({
     centerGrid: {
         display: 'flex',
         justifyContent: 'center',
-        height:'100px'
+        height: '100px'
     },
     buttonList: {
         paddingTop: 100
@@ -32,14 +35,42 @@ const useStyles = makeStyles({
     homeIcon: {
         color: "#fff"
     },
-    buttonIcon:{
-        marginTop:20
+    buttonIcon: {
+        
+    },
+    selectGrid:{
+        backgroundColor:"#fff",
+        borderTopLeftRadius:'12px',
+        borderBottomLeftRadius:'12px'
+    },
+    selectIcon:{
+        color:'#893188'
     }
 })
 
 const SideNav = () => {
     const classes = useStyles();
-    console.log(classes)
+    const [selectOne, setSelectOne ]= useState(true)
+    const [selectTwo, setSelectTwo] = useState(false)
+    const [selectThree, setSelectThree] = useState(false)
+
+    const chooseOne = () =>{
+        setSelectOne(true)
+        setSelectTwo(false)
+        setSelectThree(false)
+    }
+
+    const chooseTwo = () =>{
+        setSelectOne(false)
+        setSelectTwo(true)
+        setSelectThree(false)
+    }
+    const chooseThree = () => {
+        setSelectOne(false)
+        setSelectTwo(false)
+        setSelectThree(true)
+    }
+
     return (
         <Grid className={classes.sideNav} direction="column">
             <MenuList align="center">
@@ -48,15 +79,22 @@ const SideNav = () => {
                         <img src="/images/homeIcon.png" alt="" className={classes.img} />
                     </Grid>
                     <Grid container direction="column" className={classes.buttonList}>
-                        <Grid item className={classes.buttonIcon}>
-                            <MenuItem className={classes.centerGrid}><HomeIcon fontSize="large" className={classes.homeIcon} /></MenuItem>
+                        <Grid item className={[classes.buttonIcon, selectOne && classes.selectGrid]} >
+                            <Link to="/manage-room" onClick={chooseOne}>
+                                <MenuItem className={classes.centerGrid}><AirlineSeatFlatAngledIcon fontSize="large" className={[classes.homeIcon, selectOne && classes.selectIcon]} /></MenuItem>
+                            </Link>
                         </Grid>
-                        <Grid item >
-                            <MenuItem className={classes.centerGrid}><HomeIcon fontSize="large" className={classes.homeIcon} /></MenuItem>
+                        <Grid item className={[classes.buttonIcon, selectTwo&& classes.selectGrid]}>
+                            <Link to="/manage-user" onClick={chooseTwo}>
+                                <MenuItem className={classes.centerGrid}><PeopleAltIcon fontSize="large" className={[classes.homeIcon, selectTwo && classes.selectIcon]} /></MenuItem>
+                            </Link>
                         </Grid>
-                        <Grid item>
-                            <MenuItem className={classes.centerGrid}><HomeIcon fontSize="large" className={classes.homeIcon} /></MenuItem>
+                        <Grid item className={[classes.buttonIcon, selectThree && classes.selectGrid]}>
+                            <Link to="/manage-queue" onClick={chooseThree}>
+                                <MenuItem className={classes.centerGrid}><EventNoteIcon fontSize="large" className={[classes.homeIcon, selectThree && classes.selectIcon]} /></MenuItem>
+                            </Link>
                         </Grid>
+
                     </Grid>
                 </Grid>
             </MenuList>

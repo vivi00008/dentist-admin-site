@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import { Grid, IconButton, makeStyles } from '@material-ui/core';
-import LocalHospitalIcon from '@material-ui/icons/LocalHospital';
 import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
 import { Link } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
@@ -9,10 +8,14 @@ import { UserContext } from '../context/UserContext';
 const useStyles = makeStyles({
     root: {
         backgroundColor: '#fff',
+        marginRight:'10px'
     },
     logo1: {
         color: '#4B0082'
     },
+    logOutButton:{
+        
+    }
 })
 
 const Header = () => {
@@ -27,15 +30,12 @@ const Header = () => {
     }
 
     return (
-        <Grid container alignItems="center">
-            <Grid item>
-                <LocalHospitalIcon classes={{ root: classes.logo1 }} />
-            </Grid>
+        <Grid container alignItems="center" className={classes.root}>
             <Grid item sm></Grid>
-            <Grid item>
+            <Grid item className={classes.logOutButton}>
                 <Link to="/">
                     <IconButton onClick={doLogout}>
-                        <PowerSettingsNewIcon fontSize="small" />
+                        <PowerSettingsNewIcon fontSize="large" />
                     </IconButton>
                 </Link>
             </Grid>
