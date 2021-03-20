@@ -1,25 +1,22 @@
-import logo from './logo.svg';
-import './App.css';
+import React, {useContext} from "react";
+import { BrowserRouter, Route, Switch} from "react-router-dom";
+import {UserContext} from './context/UserContext'
+import Login from './containers/Login'
+import ManageRoom from './containers/MangeRoom'
+import Schedule from './containers/Schedule'
+import './App.css'
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  const user = useContext(UserContext)
+  const renderRouter = () =>{
+    return (
+      <Switch>
+        <Route exact path="/manage-room" component={ManageRoom}/>
+        <Route exact path="/schedule" component={Schedule} />
+      </Switch>
+    )
+  }
+  return <BrowserRouter>{user.isAuth ? renderRouter(): <Login />}</BrowserRouter>
 }
 
 export default App;

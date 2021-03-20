@@ -3,10 +3,38 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { UserProvider } from './context/UserContext'
+import { createMuiTheme, responsiveFontSizes, MuiThemeProvider } from '@material-ui/core'
+
+let theme = createMuiTheme({
+  palette: {
+    primary: {
+      main: "#2ec4b6"
+    },
+  },
+  typography: {
+    fontFamily: [
+      "Kanit",
+      "sans-serif"
+    ].join(','),
+  },
+  overrides: {
+    MuiAppBar: {
+        root: {
+            transform: 'translateZ(0)'
+        }
+    }
+}
+})
+theme = responsiveFontSizes(theme)
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <UserProvider>
+      <MuiThemeProvider theme={theme}>
+        <App />
+      </MuiThemeProvider>
+    </UserProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );
