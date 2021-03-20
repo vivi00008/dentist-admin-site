@@ -6,16 +6,7 @@ import { useHistory } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
 
 const useStyles = makeStyles({
-    root: {
-        backgroundColor: '#fff',
-        marginRight:'10px'
-    },
-    logo1: {
-        color: '#4B0082'
-    },
-    logOutButton:{
-        
-    }
+
 })
 
 const Header = () => {
@@ -30,15 +21,12 @@ const Header = () => {
     }
 
     return (
-        <Grid container alignItems="center" className={classes.root}>
-            <Grid item sm></Grid>
-            <Grid item className={classes.logOutButton}>
+        <Grid container>
                 <Link to="/">
                     <IconButton onClick={doLogout}>
                         <PowerSettingsNewIcon fontSize="large" />
                     </IconButton>
                 </Link>
-            </Grid>
         </Grid>
     )
 }

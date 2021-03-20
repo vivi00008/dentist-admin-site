@@ -107,14 +107,6 @@ const SideNav = () => {
                                 <MenuItem className={classes.centerGrid}><EventNoteIcon fontSize="large" className={[classes.homeIcon, selectThree && classes.selectIcon]} /></MenuItem>
                             </Link>
                         </Grid>
-
-                    </Grid>
-                    <Grid item className={classes.logout} direction="column">
-                        <Link to="/">
-                            <IconButton onClick={doLogout} className={classes.logoutIcon}>
-                                <PowerSettingsNewIcon fontSize="large" />
-                            </IconButton>
-                        </Link>
                     </Grid>
                 </Grid>
             </MenuList>
