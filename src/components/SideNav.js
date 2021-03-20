@@ -1,9 +1,12 @@
-import React,{useState} from 'react';
-import { makeStyles, MenuItem, MenuList, Grid } from "@material-ui/core"
+import React, { useState, useContext } from 'react';
+import { makeStyles, MenuItem, MenuList, Grid, IconButton } from "@material-ui/core"
 import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
 import EventNoteIcon from '@material-ui/icons/EventNote';
 import AirlineSeatFlatAngledIcon from '@material-ui/icons/AirlineSeatFlatAngled';
+import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
 import { Link } from 'react-router-dom'
+import {UserContext} from '../context/UserContext'
+import { useHistory} from 'react-router-dom'
 
 const useStyles = makeStyles({
     sideNav: {
@@ -35,32 +38,39 @@ const useStyles = makeStyles({
     homeIcon: {
         color: "#fff"
     },
-    buttonIcon: {
+    logout: {
+        display:'flex',
+        flexDirection:'column',
+    },
+    selectGrid: {
+        backgroundColor: "#fff",
+        borderTopLeftRadius: '12px',
+        borderBottomLeftRadius: '12px'
+    },
+    selectIcon: {
+        color: '#893188'
+    },
+    logoutIcon:{
         
-    },
-    selectGrid:{
-        backgroundColor:"#fff",
-        borderTopLeftRadius:'12px',
-        borderBottomLeftRadius:'12px'
-    },
-    selectIcon:{
-        color:'#893188'
     }
 })
 
 const SideNav = () => {
     const classes = useStyles();
-    const [selectOne, setSelectOne ]= useState(true)
+    const [selectOne, setSelectOne] = useState(true)
     const [selectTwo, setSelectTwo] = useState(false)
     const [selectThree, setSelectThree] = useState(false)
 
-    const chooseOne = () =>{
+    const user = useContext(UserContext)
+    const history = useHistory()
+
+    const chooseOne = () => {
         setSelectOne(true)
         setSelectTwo(false)
         setSelectThree(false)
     }
 
-    const chooseTwo = () =>{
+    const chooseTwo = () => {
         setSelectOne(false)
         setSelectTwo(true)
         setSelectThree(false)
@@ -70,7 +80,10 @@ const SideNav = () => {
         setSelectTwo(false)
         setSelectThree(true)
     }
-
+    const doLogout = () => {
+        user.setIsAuth(false)
+        history.push('/')
+    }
     return (
         <Grid className={classes.sideNav} direction="column">
             <MenuList align="center">
@@ -79,22 +92,29 @@ const SideNav = () => {
                         <img src="/images/homeIcon.png" alt="" className={classes.img} />
                     </Grid>
                     <Grid container direction="column" className={classes.buttonList}>
-                        <Grid item className={[classes.buttonIcon, selectOne && classes.selectGrid]} >
+                        <Grid item className={[selectOne && classes.selectGrid]} >
                             <Link to="/manage-room" onClick={chooseOne}>
                                 <MenuItem className={classes.centerGrid}><AirlineSeatFlatAngledIcon fontSize="large" className={[classes.homeIcon, selectOne && classes.selectIcon]} /></MenuItem>
                             </Link>
                         </Grid>
-                        <Grid item className={[classes.buttonIcon, selectTwo&& classes.selectGrid]}>
+                        <Grid item className={[selectTwo && classes.selectGrid]}>
                             <Link to="/manage-user" onClick={chooseTwo}>
                                 <MenuItem className={classes.centerGrid}><PeopleAltIcon fontSize="large" className={[classes.homeIcon, selectTwo && classes.selectIcon]} /></MenuItem>
                             </Link>
                         </Grid>
-                        <Grid item className={[classes.buttonIcon, selectThree && classes.selectGrid]}>
+                        <Grid item className={[selectThree && classes.selectGrid]}>
                             <Link to="/manage-queue" onClick={chooseThree}>
                                 <MenuItem className={classes.centerGrid}><EventNoteIcon fontSize="large" className={[classes.homeIcon, selectThree && classes.selectIcon]} /></MenuItem>
                             </Link>
                         </Grid>
 
+                    </Grid>
+                    <Grid item className={classes.logout} direction="column">
+                        <Link to="/">
+                            <IconButton onClick={doLogout} className={classes.logoutIcon}>
+                                <PowerSettingsNewIcon fontSize="large" />
+                            </IconButton>
+                        </Link>
                     </Grid>
                 </Grid>
             </MenuList>
