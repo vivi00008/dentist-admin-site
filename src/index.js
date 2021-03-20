@@ -11,6 +11,9 @@ let theme = createMuiTheme({
     primary: {
       main: "#2ec4b6"
     },
+    secondary:{
+      main: "#c42f2e"
+    }
   },
   typography: {
     fontFamily: [

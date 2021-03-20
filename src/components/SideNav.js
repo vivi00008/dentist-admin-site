@@ -1,12 +1,9 @@
-import React, { useState, useContext } from 'react';
-import { makeStyles, MenuItem, MenuList, Grid, IconButton } from "@material-ui/core"
+import React, { useState } from 'react';
+import { makeStyles, MenuItem, MenuList, Grid} from "@material-ui/core"
 import PeopleAltIcon from '@material-ui/icons/PeopleAlt';
 import EventNoteIcon from '@material-ui/icons/EventNote';
 import AirlineSeatFlatAngledIcon from '@material-ui/icons/AirlineSeatFlatAngled';
-import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
 import { Link } from 'react-router-dom'
-import {UserContext} from '../context/UserContext'
-import { useHistory} from 'react-router-dom'
 
 const useStyles = makeStyles({
     sideNav: {
@@ -61,9 +58,6 @@ const SideNav = () => {
     const [selectTwo, setSelectTwo] = useState(false)
     const [selectThree, setSelectThree] = useState(false)
 
-    const user = useContext(UserContext)
-    const history = useHistory()
-
     const chooseOne = () => {
         setSelectOne(true)
         setSelectTwo(false)
@@ -80,10 +74,7 @@ const SideNav = () => {
         setSelectTwo(false)
         setSelectThree(true)
     }
-    const doLogout = () => {
-        user.setIsAuth(false)
-        history.push('/')
-    }
+
     return (
         <Grid className={classes.sideNav} direction="column">
             <MenuList align="center">

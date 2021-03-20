@@ -1,15 +1,23 @@
 import React, { useContext } from 'react';
-import { Grid, IconButton, makeStyles } from '@material-ui/core';
+import { Grid, IconButton, makeStyles, Typography } from '@material-ui/core';
 import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
 import { Link } from 'react-router-dom';
 import { useHistory } from 'react-router-dom';
 import { UserContext } from '../context/UserContext';
 
 const useStyles = makeStyles({
-
+    root: {
+        paddingTop:10
+    },
+    gridHeader: {
+        
+    },
+    textHeader:{
+        fontSize:36
+    }
 })
 
-const Header = () => {
+const Header = ({ title }) => {
     const classes = useStyles()
 
     const history = useHistory()
@@ -21,12 +29,15 @@ const Header = () => {
     }
 
     return (
-        <Grid container>
-                <Link to="/">
-                    <IconButton onClick={doLogout}>
-                        <PowerSettingsNewIcon fontSize="large" />
-                    </IconButton>
-                </Link>
+        <Grid container className={classes.root} direction="row">
+            <Grid item xs className={classes.gridHeader}>
+                <Typography className={classes.textHeader}>{title}</Typography>
+            </Grid>
+            <Link to="/">
+                <IconButton onClick={doLogout}>
+                    <PowerSettingsNewIcon fontSize="large" />
+                </IconButton>
+            </Link>
         </Grid>
     )
 }
