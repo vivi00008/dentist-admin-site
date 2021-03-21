@@ -18,7 +18,7 @@ const RoomCard = ({item, select, isSelected}) =>{
     const classes = useStyle()
     return (
         <Card className={[classes.root, isSelected && classes.selectStyle]}>
-            <CardActionArea onClick={() => select(item)}>
+            <CardActionArea onClick={() => select(item?.name)}>
                 <CardContent>
                     <Typography className={classes.textContent}>{item?.name}</Typography>
                 </CardContent>

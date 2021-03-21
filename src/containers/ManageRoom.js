@@ -2,13 +2,21 @@ import React, { useEffect, useContext, useState, useCallback } from 'react'
 import Header from '../components/Header'
 import roomApi from '../api/roomApi'
 import { UserContext } from '../context/UserContext'
-import { Button, Grid, Typography, makeStyles, IconButton } from '@material-ui/core'
-import AddCircleIcon from '@material-ui/icons/AddCircle';
-import RoomCard from '../components/RoomCard'
+import { Button, Grid, Typography, makeStyles, Card, CardActionArea, CardContent, } from '@material-ui/core'
 
 const useStyles = makeStyles({
     gridContent: {
         marginTop: 20
+    },
+    card:{
+        maxWidth: 345,
+        textAlign:'center'
+    },
+    textCard:{
+        fontSize:18
+    },
+    selectCard:{
+        backgroundColor:"#c577c4"
     }
 })
 
@@ -31,13 +39,18 @@ const ManageRoom = () => {
 
     const handleSelectRoom = useCallback((value) => {
         setSelectRoom(value)
-        handleFilterData()
     }, [])
-    
-    const handleFilterData = useCallback(() =>{
-        
-    }, [selectRoom])
 
+    const handleFilterData = useCallback((value) => {
+        setFilterData(value)
+    }, [])
+
+    const chooseRoomCard = (value) =>{
+        handleSelectRoom(value)
+        const queryData = roomData.filter(item => item === selectRoom)
+        handleFilterData(queryData[0])
+    }
+ 
     const fetchData = async () => {
         handleIsLoading(false)
         try {
@@ -64,6 +77,7 @@ const ManageRoom = () => {
             <Header title={"ประเภทห้องทันตกรรม"} />
             {isLoading ?
                 <React.Fragment>
+
                     <Grid container direction="row" className={classes.gridContent}>
                         <Grid item xs={6}>
                             <Typography>เลือกประเภทห้องทันตกรรม</Typography>
@@ -77,7 +91,13 @@ const ManageRoom = () => {
                         {roomData.map((e) => {
                             return (
                                 <Grid item xs={3}>
-                                    <RoomCard item={e} select={handleSelectRoom} isSelected={e === selectRoom} />
+                                    <Card className={[classes.card, selectRoom === e ? classes.selectCard:null]}>
+                                        <CardActionArea onClick={() => chooseRoomCard(e)}>
+                                            <CardContent>
+                                                <Typography className={classes.textCard}>{e?.name}</Typography>
+                                            </CardContent>
+                                        </CardActionArea>
+                                    </Card>
                                 </Grid>
                             )
                         })}
@@ -94,6 +114,10 @@ const ManageRoom = () => {
                             <Button variant="contained" color="secondary" ><Typography>ลบยูนิต</Typography></Button>
                         </Grid>
                     </Grid>
+
+                    {<Grid>
+                        <Typography>{filterData?.name}</Typography>
+                    </Grid>}
 
 
                 </React.Fragment>
