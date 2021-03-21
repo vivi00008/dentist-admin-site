@@ -3,20 +3,43 @@ import Header from '../components/Header'
 import roomApi from '../api/roomApi'
 import { UserContext } from '../context/UserContext'
 import { Button, Grid, Typography, makeStyles, Card, CardActionArea, CardContent, } from '@material-ui/core'
+import AirlineSeatFlatAngledIcon from '@material-ui/icons/AirlineSeatFlatAngled';
 
 const useStyles = makeStyles({
     gridContent: {
         marginTop: 20
     },
-    card:{
+    card: {
         maxWidth: 345,
-        textAlign:'center'
+        textAlign: 'center'
     },
-    textCard:{
-        fontSize:18
+    textCard: {
+        fontSize: 18
     },
-    selectCard:{
-        backgroundColor:"#c577c4"
+    selectCard: {
+        backgroundColor: "#c577c4"
+    },
+    gridChair: {
+        marginTop: 20,
+    },
+    chairIcon: {
+        color: "#c4c4c4",
+        textAlign: 'center'
+    },
+    chairCard: {
+        maxWidth: 75,
+        textAlign: 'center',
+        height: 'auto'
+    },
+    chairContent: {
+        marginTop: 10,
+        fontSize: 18,
+    },
+    gridRenderChair: {
+        textAlign: 'center'
+    },
+    unavailableChairCard:{
+        color:'#f1b261'
     }
 })
 
@@ -24,33 +47,26 @@ const ManageRoom = () => {
     const [isLoading, setIsLoading] = useState(false)
     const [roomData, setRoomData] = useState([])
     const [selectRoom, setSelectRoom] = useState()
-    const [filterData, setFilterData] = useState()
 
     const user = useContext(UserContext)
     const classes = useStyles()
 
-    const handleIsLoading = useCallback((value) => {
+    const handleIsLoading = (value) => {
         setIsLoading(value)
-    }, [])
-
-    const handleRoomData = useCallback((value) => {
-        setRoomData(value)
-    }, [])
-
-    const handleSelectRoom = useCallback((value) => {
-        setSelectRoom(value)
-    }, [])
-
-    const handleFilterData = useCallback((value) => {
-        setFilterData(value)
-    }, [])
-
-    const chooseRoomCard = (value) =>{
-        handleSelectRoom(value)
-        const queryData = roomData.filter(item => item === selectRoom)
-        handleFilterData(queryData[0])
     }
- 
+
+    const handleRoomData = (value) => {
+        setRoomData(value)
+    }
+
+    const handleSelectRoom = (value) => {
+        setSelectRoom(value)
+    }
+
+    const chooseRoomCard = useCallback((value) => {
+        handleSelectRoom(value)
+    }, [selectRoom, roomData])
+
     const fetchData = async () => {
         handleIsLoading(false)
         try {
@@ -91,7 +107,7 @@ const ManageRoom = () => {
                         {roomData.map((e) => {
                             return (
                                 <Grid item xs={3}>
-                                    <Card className={[classes.card, selectRoom === e ? classes.selectCard:null]}>
+                                    <Card className={[classes.card, selectRoom === e ? classes.selectCard : null]}>
                                         <CardActionArea onClick={() => chooseRoomCard(e)}>
                                             <CardContent>
                                                 <Typography className={classes.textCard}>{e?.name}</Typography>
@@ -115,9 +131,19 @@ const ManageRoom = () => {
                         </Grid>
                     </Grid>
 
-                    {<Grid>
-                        <Typography>{filterData?.name}</Typography>
-                    </Grid>}
+                    <Grid container direction="row" spacing={5} className={classes.gridChair}>
+                        {selectRoom?.seats.map((e) => {
+                            const name = Object.keys(e)
+                            return (
+                                <Grid item md={2} xs={4} className={classes.gridRenderChair} direction='column'>
+                                    <Card className={e === 0 ? classes.unavailableChairCard: classes.chairCard}>
+                                        <AirlineSeatFlatAngledIcon fontSize="large" className={classes.chairIcon} />
+                                    </Card>
+                                    <Typography className={classes.chairContent}>{name}</Typography>
+                                </Grid>
+                            )
+                        })}
+                    </Grid>
 
 
                 </React.Fragment>

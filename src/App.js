@@ -7,17 +7,23 @@ import ManageRoom from './containers/ManageRoom'
 import ManageQueue from './containers/ManageQueue'
 import './App.css'
 import SideNav from './components/SideNav'
-import { Container} from '@material-ui/core'
+import { Container, makeStyles} from '@material-ui/core'
 
+const useStyles = makeStyles({
+  container:{
+    marginLeft:'150px'
+  }
+})
 
 function App() {
   const user = useContext(UserContext)
+  const classes = useStyles()
 
   const renderRouter = () => {
     return (
       <div className="App">
           <SideNav />
-        <Container maxWidth='lg'>
+        <Container maxWidth='lg' className={classes.container}>
             <Switch>
               <Route exact path="/manage-room" component={ManageRoom} />
               <Route exact path="/manage-user" component={ManageUser} />

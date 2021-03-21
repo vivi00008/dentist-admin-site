@@ -7,13 +7,16 @@ import { UserContext } from '../context/UserContext';
 
 const useStyles = makeStyles({
     root: {
-        paddingTop:10
+        paddingTop: 10
     },
     gridHeader: {
-        
+
     },
-    textHeader:{
-        fontSize:36
+    textHeader: {
+        fontSize: 36
+    },
+    gridLogout:{
+        textAlign:'right'
     }
 })
 
@@ -33,11 +36,13 @@ const Header = ({ title }) => {
             <Grid item xs className={classes.gridHeader}>
                 <Typography className={classes.textHeader}>{title}</Typography>
             </Grid>
-            <Link to="/">
-                <IconButton onClick={doLogout}>
-                    <PowerSettingsNewIcon fontSize="large" />
-                </IconButton>
-            </Link>
+            <Grid item className={classes.gridLogout}>
+                <Link to="/">
+                    <IconButton onClick={doLogout}>
+                        <PowerSettingsNewIcon fontSize="large" />
+                    </IconButton>
+                </Link>
+            </Grid>
         </Grid>
     )
 }
