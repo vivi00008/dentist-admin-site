@@ -51,17 +51,17 @@ const ManageRoom = () => {
     const user = useContext(UserContext)
     const classes = useStyles()
 
-    const handleIsLoading = (value) => {
+    const handleIsLoading = useCallback((value) => {
         setIsLoading(value)
-    }
+    }, [])
 
-    const handleRoomData = (value) => {
+    const handleRoomData = useCallback((value) => {
         setRoomData(value)
-    }
+    },[])
 
-    const handleSelectRoom = (value) => {
+    const handleSelectRoom = useCallback((value) => {
         setSelectRoom(value)
-    }
+    },[])
 
     const chooseRoomCard = useCallback((value) => {
         handleSelectRoom(value)
@@ -72,7 +72,7 @@ const ManageRoom = () => {
         try {
             const response = await roomApi.get('/floors', {
                 headers: {
-                    Authorization: user.token
+                    Authorization: user?.user?.token
                 }
             })
             if (response.data.success) {
