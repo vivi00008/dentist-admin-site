@@ -1,13 +1,19 @@
 import React, { useEffect, useContext, useState, useCallback } from 'react'
 import Header from '../components/Header'
 import roomApi from '../api/roomApi'
+import AddroomForm from '../components/AddroomForm'
 import { UserContext } from '../context/UserContext'
-import { Button, Grid, Typography, makeStyles, Card, CardActionArea, CardContent, } from '@material-ui/core'
+import { Button, Grid, Typography, makeStyles, Card, CardActionArea, CardContent,
+        DialogContent, Dialog, DialogTitle } from '@material-ui/core'
 import AirlineSeatFlatAngledIcon from '@material-ui/icons/AirlineSeatFlatAngled';
+import CloseIcon from '@material-ui/icons/Close';
+import SpinningCircles from 'react-loading-icons/dist/components/spinning-circles'
+
 
 const useStyles = makeStyles({
     gridContent: {
-        marginTop: 20
+        marginTop: 20,
+        textAlign: 'center'
     },
     card: {
         maxWidth: 345,
@@ -23,33 +29,53 @@ const useStyles = makeStyles({
         marginTop: 20,
     },
     chairIcon: {
+        textAlign: 'center',
         color: "#c4c4c4",
-        textAlign: 'center'
     },
     chairCard: {
         maxWidth: 75,
         textAlign: 'center',
-        height: 'auto'
+        height: 'auto',
+        marginLeft: '48px'
     },
     chairContent: {
         marginTop: 10,
         fontSize: 18,
     },
     gridRenderChair: {
-        textAlign: 'center'
+        textAlign: 'center',
     },
     unavailableChairCard:{
-        color:'#f1b261'
-    }
+        color:'#f1b261',
+        marginLeft: '48px'
+    },
+    dialogWrapper: {
+        position: 'absolute',
+    },
+    dialogTitle: {
+        paddingRight:'0px'
+    },
+    loadingindicator: {
+        alignmentBaseline: 'middle',
+    },
 })
 
 const ManageRoom = () => {
     const [isLoading, setIsLoading] = useState(false)
     const [roomData, setRoomData] = useState([])
     const [selectRoom, setSelectRoom] = useState()
+    const [open, setOpen] = useState(false);
 
     const user = useContext(UserContext)
     const classes = useStyles()
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
 
     const handleIsLoading = useCallback((value) => {
         setIsLoading(value)
@@ -99,7 +125,18 @@ const ManageRoom = () => {
                             <Typography>เลือกประเภทห้องทันตกรรม</Typography>
                         </Grid>
                         <Grid item xs={6}>
-                            <Button variant="contained" color="primary" ><Typography>เพิ่มห้อง</Typography></Button>
+                            <Button variant="contained" color="primary" onClick={handleClickOpen}><Typography>เพิ่มห้อง</Typography></Button>
+                            <Dialog open={open} maxWidth="md" classes={{paper :classes.dialogWrapper}} spacing={2}>
+                                <DialogTitle className={classes.dialogTitle}>
+                                    <div style={{display: 'flex'}}>
+                                        <Typography variant="h5" component="div" style={{flexGrow:1}}>เพิ่มห้องทันตกรรม</Typography>
+                                        <Button color="secondary" onClick={handleClose}><CloseIcon/></Button>
+                                    </div>
+                                </DialogTitle>
+                                <DialogContent dividers>
+                                    <AddroomForm/>
+                                </DialogContent>
+                        </Dialog>
                         </Grid>
                     </Grid>
 
@@ -124,7 +161,7 @@ const ManageRoom = () => {
                             <Typography>ที่นั่ง (ยูนิต)</Typography>
                         </Grid>
                         <Grid item xs={2}>
-                            <Button variant="contained" color="primary" ><Typography>เพิ่มยูนิต</Typography></Button>
+                            <Button variant="contained" color="primary"><Typography>เพิ่มยูนิต</Typography></Button>
                         </Grid>
                         <Grid item xs={2}>
                             <Button variant="contained" color="secondary" ><Typography>ลบยูนิต</Typography></Button>
@@ -137,7 +174,7 @@ const ManageRoom = () => {
                             return (
                                 <Grid item md={2} xs={4} className={classes.gridRenderChair} direction='column'>
                                     <Card className={e === 0 ? classes.unavailableChairCard: classes.chairCard}>
-                                        <AirlineSeatFlatAngledIcon fontSize="large" className={classes.chairIcon} />
+                                        <AirlineSeatFlatAngledIcon fontSize="large" className={classes.chairIcon}/>
                                     </Card>
                                     <Typography className={classes.chairContent}>{name}</Typography>
                                 </Grid>
@@ -147,9 +184,7 @@ const ManageRoom = () => {
 
 
                 </React.Fragment>
-                : <div>
-                    Loading data ..
-                    </div>}
+                : <SpinningCircles className={classes.loadingindicator}/>}
         </Grid>
     )
 }
