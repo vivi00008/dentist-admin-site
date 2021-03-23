@@ -2,21 +2,32 @@ import React, { useEffect, useState, useContext, useCallback } from 'react'
 import Header from '../components/Header'
 import userApi from '../api/userApi'
 import { UserContext } from '../context/UserContext'
-import { makeStyles, Typography, Card, CardActionArea, CardContent, Grid, Table, Paper, TableContainer, TableHead, TableRow, TableCell } from '@material-ui/core'
+import { makeStyles, Typography, Card, CardActionArea, CardContent, Grid, Table, Paper, TableContainer, TableHead, TableRow, TableCell, TableBody, Button } from '@material-ui/core'
 
 const useStyles = makeStyles({
     tableRoot: {
-        width: '100%'
+        width: '100%',
+        marginTop:30
     },
     container: {
-        maxHeight: 440,
+        maxHeight: 800,
     },
+    buttonHeader:{
+        marginTop:20
+    },
+    deleteButton:{
+        color:"#d80126"
+    },
+    editButton:{
+        color:"#f1b261"
+    }
 })
 
 const ManageUser = () => {
 
     const [allUserData, setAllUserData] = useState([])
     const [selectRole, setSelectRow] = useState()
+    const [filterData, setFilterData] = useState([])
 
     const classes = useStyles()
 
@@ -28,6 +39,10 @@ const ManageUser = () => {
         setSelectRow(value)
     }, [])
 
+    const handleFilterData = useCallback((value) =>{
+        setFilterData(value)
+    }, [])
+
     const user = useContext(UserContext)
 
     const fetchData = async () => {
@@ -37,8 +52,8 @@ const ManageUser = () => {
             }
         })
         if (response.data.success) {
-            console.log(response.data.message)
             handleAllUserData(response.data.message)
+            handleFilterData(response.data.message)
         }
     }
 
@@ -46,13 +61,20 @@ const ManageUser = () => {
         fetchData()
     }, [])
 
-    const chooseRole = useCallback((item) => {
+    const chooseRole = (item) => {
         handleSelectRole(item)
-    }, [])
+        console.log(allUserData)
+        const queryData = allUserData.filter((item) => {
+            return item.role === selectRole
+        })
+        handleFilterData(queryData)
+    }
+
+
     const roleUser = [
         {
             id: 1,
-            role: 'docter',
+            role: 'doctor',
             label: "นักศึกษา"
         },
         {
@@ -66,36 +88,45 @@ const ManageUser = () => {
         {
             id: 1,
             label: 'ID',
-            minWidth: 100
+            minWidth: 100,
+            value:'id'
         },
         {
             id: 2,
             label: 'ชื่อ-สกุล',
-            minWidth: 170
+            minWidth: 170,
+            value:'name'
         },
         {
             id: 3,
             label: 'อีเมลล์',
             minWidth: 170,
-
-
+            value:'email'
         },
         {
             id: 4,
-            label: 'เบอร์โทรศัพท์',
-            minWidth: 170
+            label: 'รหัสประจำตัว',
+            minWidth: 170,
+            value:'telephone'
         },
         {
-            id: 5,
+            id:5,
+            label:'ตำแหน่ง',
+            minWidth:170,
+            value:'role'
+        },
+        {
+            id: 6,
             label: '',
-            minWidth: 230
+            minWidth: 230,
+            value:''
         }
     ]
     return (
         <div>
             <Header title={"รายชื่อบัญชีผู้ใช้"} />
 
-            <Grid container direction="row" spacing={3}>
+            <Grid container direction="row" spacing={3} className={classes.buttonHeader}>
 
                 {roleUser.map((e) => {
                     return (
@@ -135,6 +166,29 @@ const ManageUser = () => {
                                 }
                             </TableRow>
                         </TableHead>
+                        <TableBody>
+                            {filterData.map((e) => {
+                                return (
+                                    <TableRow  hover role="checkbox" tabIndex={-1} key={e.id}>
+                                        <TableCell>{e.id}</TableCell>
+                                        <TableCell>{e.name}</TableCell>
+                                        <TableCell>{e.email}</TableCell>
+                                        <TableCell>{e.username || '-'}</TableCell>
+                                        <TableCell>{e.role}</TableCell>
+                                        <TableCell>
+                                            <Grid container>
+                                                <Grid item>
+                                                    <Button variant="contained" style={{marginRight:20, backgroundColor:"#f5a81e", color:"#fff"}}><Typography>แก้ไข</Typography></Button>
+                                                </Grid>
+                                                <Grid item>
+                                                    <Button variant="contained" color="secondary"><Typography>ลบ</Typography></Button>
+                                                </Grid>
+                                            </Grid>
+                                        </TableCell>
+                                    </TableRow>
+                                )
+                            })}
+                        </TableBody>
                     </Table>
                 </TableContainer>
             </Paper>

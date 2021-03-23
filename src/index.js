@@ -9,11 +9,12 @@ import { createMuiTheme, responsiveFontSizes, MuiThemeProvider } from '@material
 let theme = createMuiTheme({
   palette: {
     primary: {
-      main: "#2ec4b6"
+      main: "#2ec4b6",
+      contrastText:"#fffffe"
     },
     secondary:{
-      main: "#c42f2e"
-    }
+      main: "#c42f2e",
+    },
   },
   typography: {
     fontFamily: [
