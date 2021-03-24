@@ -20,28 +20,19 @@ const useStyles = makeStyles({
     },
     editButton:{
         color:"#f1b261"
+    },
+    selectCard:{
+        backgroundColor:"#b565b4"
     }
 })
 
 const ManageUser = () => {
 
     const [allUserData, setAllUserData] = useState([])
-    const [selectRole, setSelectRow] = useState()
+    const [selectRole, setSelectRole] = useState()
     const [filterData, setFilterData] = useState([])
 
     const classes = useStyles()
-
-    const handleAllUserData = useCallback((value) => {
-        setAllUserData(value)
-    }, [])
-
-    const handleSelectRole = useCallback((value) => {
-        setSelectRow(value)
-    }, [])
-
-    const handleFilterData = useCallback((value) =>{
-        setFilterData(value)
-    }, [])
 
     const user = useContext(UserContext)
 
@@ -52,8 +43,8 @@ const ManageUser = () => {
             }
         })
         if (response.data.success) {
-            handleAllUserData(response.data.message)
-            handleFilterData(response.data.message)
+            setAllUserData(response.data.message)
+            setFilterData(response.data.message)
         }
     }
 
@@ -62,12 +53,14 @@ const ManageUser = () => {
     }, [])
 
     const chooseRole = (item) => {
-        handleSelectRole(item)
-        console.log(allUserData)
-        const queryData = allUserData.filter((item) => {
-            return item.role === selectRole
-        })
-        handleFilterData(queryData)
+        setSelectRole(item)
+        console.log(item)
+        const queryData = filterItem(item)
+        setFilterData(queryData)
+    }
+
+    const filterItem = (item) =>{
+        return allUserData.filter((items) => items.role === item)
     }
 
 
@@ -131,7 +124,7 @@ const ManageUser = () => {
                 {roleUser.map((e) => {
                     return (
                         <Grid item>
-                            <Card md={6}>
+                            <Card md={6} className={selectRole === e.role && classes.selectCard}>
                                 <CardActionArea onClick={() => chooseRole(e.role)}>
                                     <CardContent>
                                         <Typography>
@@ -168,13 +161,19 @@ const ManageUser = () => {
                         </TableHead>
                         <TableBody>
                             {filterData.map((e) => {
+                                let roleText = ''
+                                if(e.role == "doctor"){
+                                    roleText += 'นักศึกษา'
+                                }else{
+                                    roleText += 'อาจารย์'
+                                }
                                 return (
                                     <TableRow  hover role="checkbox" tabIndex={-1} key={e.id}>
                                         <TableCell>{e.id}</TableCell>
                                         <TableCell>{e.name}</TableCell>
                                         <TableCell>{e.email}</TableCell>
                                         <TableCell>{e.username || '-'}</TableCell>
-                                        <TableCell>{e.role}</TableCell>
+                                        <TableCell>{roleText}</TableCell>
                                         <TableCell>
                                             <Grid container>
                                                 <Grid item>

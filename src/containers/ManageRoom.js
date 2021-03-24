@@ -65,6 +65,7 @@ const ManageRoom = () => {
     const [roomData, setRoomData] = useState([])
     const [selectRoom, setSelectRoom] = useState()
     const [open, setOpen] = useState(false);
+    const [createRoomSuccess, setCreateRoomSuccess] = useState(1)
 
     const user = useContext(UserContext)
     const classes = useStyles()
@@ -89,6 +90,10 @@ const ManageRoom = () => {
         setSelectRoom(value)
     },[])
 
+    const handleCreateSuccess = useCallback(() =>{
+        setCreateRoomSuccess(createRoomSuccess +1)
+    }, [])
+
     const chooseRoomCard = useCallback((value) => {
         handleSelectRoom(value)
     }, [selectRoom, roomData])
@@ -112,7 +117,7 @@ const ManageRoom = () => {
 
     useEffect(() => {
         fetchData()
-    }, [])
+    }, [createRoomSuccess])
 
     return (
         <Grid container>
@@ -134,7 +139,7 @@ const ManageRoom = () => {
                                     </div>
                                 </DialogTitle>
                                 <DialogContent dividers>
-                                    <AddroomForm/>
+                                    <AddroomForm close={handleClose} refresh={handleCreateSuccess}/>
                                 </DialogContent>
                         </Dialog>
                         </Grid>
