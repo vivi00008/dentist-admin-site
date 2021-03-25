@@ -27,6 +27,14 @@ const useStyles = makeStyles({
     dialogTitle: {
         paddingRight:'0px'
     },
+    selectText:{
+        color:'#fff'
+    },
+    loadingindicator: {
+        alignmentBaseline: 'middle',
+        marginLeft: 650,
+        paddingTop: 300
+    },
 })
 
 const ManageQueue = () => {
@@ -41,15 +49,18 @@ const ManageQueue = () => {
     const [open, setOpen] = useState(false)
     const [createSuccess, setCreateSuccess] = useState(1)
 
+    const [isSelectRoom, setIsSelectRoom] = useState(false)
+    const [isSelectSession, setIsSelectSession] = useState(false)
+
     const handleCreateSuccess = useCallback(() =>{
         setCreateSuccess(createSuccess+1)
     }, [])
 
-    const handleClose = useCallback((value) =>{
+    const handleClose = useCallback(() =>{
         setOpen(false)
     }, [])
 
-    const handleOpen = useCallback((value) => {
+    const handleOpen = useCallback(() => {
         setOpen(true)
     },[])
 
@@ -71,7 +82,7 @@ const ManageQueue = () => {
 
     const handleFilterSessionData = useCallback((value) => {
         setFilterSessionData(value)
-    }, [])
+    }, [selectRoom])
 
     const handleSelectSession = useCallback((value) => {
         setSelectSession(value)
@@ -83,7 +94,7 @@ const ManageQueue = () => {
 
     const handleFilterCartData = useCallback((value) => {
         setFilterCartData(value)
-    }, [])
+    }, [selectRoom])
 
     useEffect(() => {
         fetchSessionData()
@@ -146,12 +157,15 @@ const ManageQueue = () => {
     }
 
     const chooseRoomCard = (value) => {
+        setIsSelectRoom(true)
+        setIsSelectSession(false)
         handleSelectRoom(value)
+        handleFilterCartData([])
         handleFilterSessionData(sessionData.filter((item) => item.floorId === value.id))
     }
 
     const chooseSessionCard = (value) => {
-        console.log(value)
+        setIsSelectSession(true)
         handleSelectSession(value)
         handleFilterCartData(cartData.filter((item) => item.sessionId === value.id))
     }
@@ -185,7 +199,7 @@ const ManageQueue = () => {
                                     <Card className={[classes.card, selectRoom === e ? classes.selectCard : null]}>
                                         <CardActionArea onClick={() => chooseRoomCard(e)}>
                                             <CardContent>
-                                                <Typography className={classes.textCard}>{e?.name}</Typography>
+                                                <Typography className={[classes.textCard, selectRoom === e ? classes.selectText : null]}>{e?.name}</Typography>
                                             </CardContent>
                                         </CardActionArea>
                                     </Card>
@@ -195,9 +209,9 @@ const ManageQueue = () => {
                     </Grid>
 
 
-                    <Grid item align="center" direction="column">
+                    {isSelectRoom ? <Grid item align="center" direction="column">
                         <Typography>เลือกรอบที่เปิด</Typography>
-                    </Grid>
+                    </Grid> : null}
 
                     <Grid container direction="row" spacing={3} style={{ marginTop: 10 }}>
                         {filterSessionData.map((e) => {
@@ -214,7 +228,7 @@ const ManageQueue = () => {
                                     <Card className={[classes.card, selectSession === e ? classes.selectCard : null]}>
                                         <CardActionArea>
                                             <CardContent onClick={() => chooseSessionCard(e)}>
-                                                <Grid container direction="column" >
+                                                <Grid container direction="column" className={selectSession === e ? classes.selectText : null}>
                                                     <Grid item>
                                                         <Typography>วันที่ : {textTitle}</Typography>
 
@@ -234,9 +248,9 @@ const ManageQueue = () => {
                         })}
                     </Grid>
 
-                    <Grid item align="center" direction="column">
+                    {isSelectSession ? <Grid item align="center" direction="column">
                         <Typography>การจองทั้งหมด</Typography>
-                    </Grid>
+                    </Grid> : null}
 
                     <Grid container direction="row" spacing={3} style={{ marginTop: 10 }}>
                         {filterCartData.map((e) => {
@@ -254,6 +268,9 @@ const ManageQueue = () => {
                                                 <Grid item>
                                                     <Typography>อาจารย์ : {e?.teacherName}</Typography>
                                                 </Grid>
+                                                <Grid item>
+                                                    <Typography>สถานะ: {e?.state}</Typography>
+                                                </Grid>
                                             </Grid>
                                         </CardContent>
                                     </Card>
@@ -262,7 +279,7 @@ const ManageQueue = () => {
                         })}
                     </Grid>
                 </Grid>
-                : <SpinningCircles className={classes.loadingindicator} />}
+                : <div>Loading Data</div>}
         </div >
     )
 }

@@ -40,6 +40,9 @@ const useStyles = makeStyles({
         backgroundColor:"#c877dc",
         textEmphasisColor:"white"
         },
+    selectText:{
+        color:'#fff'
+    }
     // tableRow: {
     //     "tbody tr:hover": {
     //         backgroundColor: "#fffbf2",
@@ -163,7 +166,7 @@ const ManageUser = () => {
                             <Card md={6} className={classes.cardButton,selectRole === e.role && classes.selectCard}>
                                 <CardActionArea onClick={() => chooseRole(e.role)}>
                                     <CardContent>
-                                        <Typography>
+                                        <Typography className={selectRole === e.role && classes.selectText}>
                                             {e.label}
                                         </Typography>
                                     </CardContent>

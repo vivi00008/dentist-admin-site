@@ -60,6 +60,9 @@ const useStyles = makeStyles({
         marginLeft: 650,
         paddingTop: 300
     },
+    selectText:{
+        color:"#fff"
+    }
 })
 
 const ManageRoom = () => {
@@ -154,7 +157,7 @@ const ManageRoom = () => {
                                     <Card className={[classes.card, selectRoom === e ? classes.selectCard : null]}>
                                         <CardActionArea onClick={() => chooseRoomCard(e)}>
                                             <CardContent>
-                                                <Typography className={classes.textCard}>{e?.name}</Typography>
+                                                <Typography className={[classes.textCard, selectRoom === e ? classes.selectText:null]}>{e?.name}</Typography>
                                             </CardContent>
                                         </CardActionArea>
                                     </Card>
