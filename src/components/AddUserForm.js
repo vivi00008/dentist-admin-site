@@ -68,7 +68,9 @@ const AddUserForm = ({ close, refresh }) => {
                 return console.log('fail register password not match')
             }
 
-            const response = await userApi.post(`/register-${role}`, { name: prefix+name, email: email, username: username, password: password }, {
+            console.log(role)
+
+            const response = await userApi.post(`/register-${role}`, { name: `${prefix} ${name}`, email: email, username: username, password: password }, {
                 headers: {
                     Authorization: user?.user?.token
                 }

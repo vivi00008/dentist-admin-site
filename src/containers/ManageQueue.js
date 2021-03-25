@@ -31,6 +31,7 @@ const ManageQueue = () => {
     const [afternoonData, setAfternoonData] = useState([])
     const [roomData, setRoomData] = useState([])
     const [selectRoom, setSelectRoom] = useState()
+    const [selectSession, setSelectSession] = useState()
 
     const handleIsLoading = useCallback((value) => {
         setIsloading(value)
@@ -58,6 +59,10 @@ const ManageQueue = () => {
 
     const handleFilterSessionData = useCallback((value) => {
         setFilterSessionData(value)
+    }, [])
+
+    const handleSelectSession = useCallback((value) =>{
+        setSelectSession(value)
     }, [])
 
     useEffect(() => {
@@ -116,7 +121,9 @@ const ManageQueue = () => {
         handleFilterSessionData(sessionData.filter((item) => item.floorId === value.id))
     }, [roomData])
 
-
+    const chooseSessionCard = useCallback((value) => {
+        handleSelectSession(value)
+    }, [])
 
     return (
         <div>
@@ -148,12 +155,45 @@ const ManageQueue = () => {
 
                     <Grid container direction="row" spacing={3} style={{ marginTop: 10 }}>
                         {filterSessionData.map((e) => {
+                            let textTitle = moment(new Date(e.end))
+                            textTitle = textTitle.format('DD/MM/YYYY')
+                            let timeInDay = ""
+                            if(e.sessionInDay === 'morning'){
+                                timeInDay = "เช้า (9.30 - 12.30)"
+                            }else{
+                                timeInDay = "บ่าย (13.30 - 16.30)"
+                            }
                             return (
-                                <Grid item xs={4} className={classes.card}>
-                                    <Card>{e.id}</Card>
+                                <Grid item xs={4} >
+                                    <Card className={[classes.card, selectSession === e ? classes.selectCard:null]}>
+                                        <CardActionArea>
+                                            <CardContent onClick={() => chooseSessionCard(e)}>
+                                                <Grid container direction="column" >
+                                                    <Grid item>
+                                                        <Typography>วันที่ : {textTitle}</Typography>
+
+                                                    </Grid>
+                                                    <Grid item>
+                                                        <Typography>จำนวนที่ยูนิต : {e.seatsAvailable} ตัว</Typography>
+                                                    </Grid>
+                                                    <Grid item>
+                                                        <Typography>ช่วงเวลา : {timeInDay} </Typography>
+                                                    </Grid>
+                                                </Grid>
+                                            </CardContent>
+                                        </CardActionArea>
+                                    </Card>
                                 </Grid>
                             )
                         })}
+                    </Grid>
+
+                    <Grid item align="center" direction="column">
+                        <Typography>คิว</Typography>
+                    </Grid>
+
+                    <Grid container direction="row" spacing={3} style={{ marginTop: 10 }}>
+                        
                     </Grid>
 
 
