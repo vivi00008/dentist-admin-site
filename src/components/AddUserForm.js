@@ -2,6 +2,7 @@ import React, { useCallback, useState, useContext } from 'react'
 import { makeStyles, TextField, Typography, Grid, Button, FormControl, InputLabel, MenuItem, Select } from '@material-ui/core';
 import userApi from '../api/userApi'
 import { UserContext } from '../context/UserContext'
+import { SpinningCircles } from 'react-loading-icons';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -18,6 +19,10 @@ const useStyles = makeStyles(theme => ({
         margin: theme.spacing(1),
         minWidth: 120,
     },
+    loadindicator: {
+        marginLeft: 200,
+        paddingTop: 10,
+    },
 }))
 
 const AddUserForm = ({ close, refresh }) => {
@@ -28,6 +33,7 @@ const AddUserForm = ({ close, refresh }) => {
     const [role, setRole] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
     const [prefix, setPrefix] = useState('')
+    const [loaddata, setLoadData] = useState(true)
 
     const user = useContext(UserContext)
     const classes = useStyles()
@@ -63,6 +69,7 @@ const AddUserForm = ({ close, refresh }) => {
     const handleSubmit = useCallback(async () => {
 
         try {
+            setLoadData(false)
 
             if (password !== confirmPassword) {
                 return console.log('fail register password not match')
@@ -79,6 +86,7 @@ const AddUserForm = ({ close, refresh }) => {
             console.log(response.data)
 
             if (response.data.success) {
+                setLoadData(true)
                 refresh()
                 close()
             }
@@ -144,6 +152,7 @@ const AddUserForm = ({ close, refresh }) => {
                 <Grid item xs={12} className={classes.btnGrid}>
                     <Button variant="contained" color="primary" type="submit" size="large" onClick={handleSubmit}><Typography>ยืนยัน</Typography></Button>
                 </Grid>
+                {loaddata?null:(<div className={classes.loadindicator} ><SpinningCircles/></div>)}
             </Grid>
         </div>
     )

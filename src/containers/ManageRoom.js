@@ -57,6 +57,8 @@ const useStyles = makeStyles({
     },
     loadingindicator: {
         alignmentBaseline: 'middle',
+        marginLeft: 650,
+        paddingTop: 300
     },
 })
 

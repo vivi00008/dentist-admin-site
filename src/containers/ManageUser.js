@@ -12,7 +12,7 @@ const useStyles = makeStyles({
         marginTop:30
     },
     container: {
-        maxHeight: 800,
+        maxHeight: 700,
     },
     buttonHeader:{
         marginTop:20
