@@ -3,6 +3,7 @@ import Header from '../components/Header'
 import { Button, Grid, makeStyles, Typography, Card, CardActionArea, CardContent } from '@material-ui/core'
 import sessionApi from '../api/sessionApi'
 import roomApi from '../api/roomApi'
+import cartApi from '../api/cartApi'
 import { UserContext } from '../context/UserContext'
 import moment from 'moment'
 import SpinningCircles from 'react-loading-icons/dist/components/spinning-circles'
@@ -30,8 +31,10 @@ const ManageQueue = () => {
     const [morningData, setMorningData] = useState([])
     const [afternoonData, setAfternoonData] = useState([])
     const [roomData, setRoomData] = useState([])
+    const [cartData, setCartData] = useState([])
+    const [filterCartData, setFilterCartData] = useState()
     const [selectRoom, setSelectRoom] = useState()
-    const [selectSession, setSelectSession] = useState()
+    const [selectSession, setSelectSession] = useState('')
 
     const handleIsLoading = useCallback((value) => {
         setIsloading(value)
@@ -61,13 +64,18 @@ const ManageQueue = () => {
         setFilterSessionData(value)
     }, [])
 
-    const handleSelectSession = useCallback((value) =>{
+    const handleSelectSession = useCallback((value) => {
         setSelectSession(value)
+    }, [])
+
+    const handleCartData = useCallback((value) =>{
+        setCartData(value)
     }, [])
 
     useEffect(() => {
         fetchSessionData()
         fetchRoomData()
+        fetchCartdata()
     }, [])
 
     useEffect(() => {
@@ -111,10 +119,24 @@ const ManageQueue = () => {
 
     }
 
+    const fetchCartdata = async () =>{
+        try{
+            const response = await cartData.get('/all-carts', {
+                headers: {
+                    Authorization: user?.user?.token
+                }
+            })
+            if (response.data.success) {
+                handleCartData(response.data.message)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     const filterData = (time) => {
         return sessionData.filter((item) => item.sessionInDay === time)
     }
-
 
     const chooseRoomCard = useCallback((value) => {
         handleSelectRoom(value)
@@ -123,6 +145,7 @@ const ManageQueue = () => {
 
     const chooseSessionCard = useCallback((value) => {
         handleSelectSession(value)
+        
     }, [])
 
     return (
@@ -149,23 +172,25 @@ const ManageQueue = () => {
                             )
                         })}
                     </Grid>
-                    <Grid item align="center" direction="column">
-                        <Typography>เลือกรอบที่เปิด</Typography>
-                    </Grid>
+
+
+                        <Grid item align="center" direction="column">
+                            <Typography>เลือกรอบที่เปิด</Typography>
+                        </Grid>
 
                     <Grid container direction="row" spacing={3} style={{ marginTop: 10 }}>
                         {filterSessionData.map((e) => {
                             let textTitle = moment(new Date(e.end))
                             textTitle = textTitle.format('DD/MM/YYYY')
                             let timeInDay = ""
-                            if(e.sessionInDay === 'morning'){
+                            if (e.sessionInDay === 'morning') {
                                 timeInDay = "เช้า (9.30 - 12.30)"
-                            }else{
+                            } else {
                                 timeInDay = "บ่าย (13.30 - 16.30)"
                             }
                             return (
                                 <Grid item xs={4} >
-                                    <Card className={[classes.card, selectSession === e ? classes.selectCard:null]}>
+                                    <Card className={[classes.card, selectSession === e ? classes.selectCard : null]}>
                                         <CardActionArea>
                                             <CardContent onClick={() => chooseSessionCard(e)}>
                                                 <Grid container direction="column" >
@@ -188,8 +213,8 @@ const ManageQueue = () => {
                         })}
                     </Grid>
 
-                    <Grid item align="center" direction="column">
-                        <Typography>คิว</Typography>
+                     <Grid item align="center" direction="column">
+                        <Typography>การจองทั้งหมด</Typography>
                     </Grid>
 
                     <Grid container direction="row" spacing={3} style={{ marginTop: 10 }}>

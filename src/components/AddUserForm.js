@@ -66,16 +66,13 @@ const AddUserForm = ({ close, refresh }) => {
         setPrefix(e.target.value)
     }, [])
 
-    const handleSubmit = useCallback(async () => {
-
+    const handleSubmit = async () => {
         try {
             setLoadData(false)
 
             if (password !== confirmPassword) {
                 return console.log('fail register password not match')
             }
-
-            console.log(role)
 
             const response = await userApi.post(`/register-${role}`, { name: `${prefix} ${name}`, email: email, username: username, password: password }, {
                 headers: {
@@ -93,9 +90,7 @@ const AddUserForm = ({ close, refresh }) => {
         } catch (err) {
             console.log(err)
         }
-
-    }, [])
-
+    }
 
     return (
         <div className={classes.root}>
