@@ -32,6 +32,20 @@ const useStyles = makeStyles({
     dialogTitle: {
         paddingRight:'0px'
     },
+    addnewButton: {
+        marginTop:10,
+        marginLeft:775
+    },
+    tableHead: {
+        backgroundColor:"#c877dc",
+        textEmphasisColor:"white"
+        },
+    // tableRow: {
+    //     "tbody tr:hover": {
+    //         backgroundColor: "#fffbf2",
+    //         cursor: 'pointer'
+    //       }
+    // },
 })
 
 const ManageUser = () => {
@@ -159,17 +173,13 @@ const ManageUser = () => {
                     )
                 })}
 
-                <Grid item>
-                    <Card>
-                        <CardActionArea onClick={() => handleOpen(true)}>
-                            <Typography>เพิ่มผู้ใช้งาน</Typography>
-                        </CardActionArea>
-                    </Card>
+                <Grid item justify="flex-end">
+                    <Button variant="contained" color="primary" type="submit" size="large" onClick={() => handleOpen(true)} className={classes.addnewButton}><Typography>เพิ่มผู้ใช้งาน</Typography></Button>
                     <Dialog open={open}>
                         <DialogTitle>
                         <DialogTitle className={classes.dialogTitle}>
                                     <div style={{display: 'flex'}}>
-                                        <Typography variant="h5" component="div" style={{flexGrow:1}}>เพิ่มผู้ใข้งาน</Typography>
+                                        <Typography variant="h5" component="div" style={{flexGrow:1}}>เพิ่มผู้ใช้งาน</Typography>
                                         <Button color="secondary" onClick={handleClose}><CloseIcon/></Button>
                                     </div>
                                 </DialogTitle>
@@ -184,7 +194,7 @@ const ManageUser = () => {
             <Paper className={classes.tableRoot}>
                 <TableContainer className={classes.container}>
                     <Table>
-                        <TableHead>
+                        <TableHead className={classes.tableHead}>
                             <TableRow>
                                 {
                                     columns.map((item) => {
