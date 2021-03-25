@@ -2,7 +2,9 @@ import React, { useEffect, useState, useContext, useCallback } from 'react'
 import Header from '../components/Header'
 import userApi from '../api/userApi'
 import { UserContext } from '../context/UserContext'
-import { makeStyles, Typography, Card, CardActionArea, CardContent, Grid, Table, Paper, TableContainer, TableHead, TableRow, TableCell, TableBody, Button } from '@material-ui/core'
+import CloseIcon from '@material-ui/icons/Close';
+import { makeStyles, Typography, Card, CardActionArea, CardContent, Grid, Table, Paper, TableContainer, TableHead, TableRow, TableCell, TableBody, Button, DialogContent, Dialog, DialogTitle } from '@material-ui/core'
+import AddUserForm from '../components/AddUserForm'
 
 const useStyles = makeStyles({
     tableRoot: {
@@ -23,7 +25,13 @@ const useStyles = makeStyles({
     },
     selectCard:{
         backgroundColor:"#b565b4"
-    }
+    },
+    cardButton:{
+        maxWidth:275
+    },
+    dialogTitle: {
+        paddingRight:'0px'
+    },
 })
 
 const ManageUser = () => {
@@ -31,10 +39,24 @@ const ManageUser = () => {
     const [allUserData, setAllUserData] = useState([])
     const [selectRole, setSelectRole] = useState()
     const [filterData, setFilterData] = useState([])
+    const [open, setOpen] = useState(false)
+    const [addUserSuccess, setAddUserSuccess] = useState(1)
 
     const classes = useStyles()
 
     const user = useContext(UserContext)
+
+    const handleOpen = useCallback(() =>{
+        setOpen(true)
+    }, [])
+
+    const handleClose = useCallback(() =>{
+        setOpen(false)
+    }, [])
+
+    const handleCreateSuccess = useCallback(() =>{
+        setAddUserSuccess(addUserSuccess +1 )
+    }, [])
 
     const fetchData = async () => {
         const response = await userApi.get("/all-users", {
@@ -50,7 +72,7 @@ const ManageUser = () => {
 
     useEffect(() => {
         fetchData()
-    }, [])
+    }, [addUserSuccess])
 
     const chooseRole = (item) => {
         setSelectRole(item)
@@ -124,7 +146,7 @@ const ManageUser = () => {
                 {roleUser.map((e) => {
                     return (
                         <Grid item>
-                            <Card md={6} className={selectRole === e.role && classes.selectCard}>
+                            <Card md={6} className={classes.cardButton,selectRole === e.role && classes.selectCard}>
                                 <CardActionArea onClick={() => chooseRole(e.role)}>
                                     <CardContent>
                                         <Typography>
@@ -137,6 +159,26 @@ const ManageUser = () => {
                     )
                 })}
 
+                <Grid item>
+                    <Card>
+                        <CardActionArea onClick={() => handleOpen(true)}>
+                            <Typography>เพิ่มผู้ใช้งาน</Typography>
+                        </CardActionArea>
+                    </Card>
+                    <Dialog open={open}>
+                        <DialogTitle>
+                        <DialogTitle className={classes.dialogTitle}>
+                                    <div style={{display: 'flex'}}>
+                                        <Typography variant="h5" component="div" style={{flexGrow:1}}>เพิ่มผู้ใข้งาน</Typography>
+                                        <Button color="secondary" onClick={handleClose}><CloseIcon/></Button>
+                                    </div>
+                                </DialogTitle>
+                                <DialogContent dividers>
+                                    <AddUserForm close={handleClose} refresh={handleCreateSuccess}/>
+                                </DialogContent>
+                        </DialogTitle>
+                    </Dialog>
+                </Grid>
             </Grid>
 
             <Paper className={classes.tableRoot}>
