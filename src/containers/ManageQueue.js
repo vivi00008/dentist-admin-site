@@ -1,12 +1,14 @@
 import React, { useState, useContext, useEffect, useCallback } from 'react'
 import Header from '../components/Header'
-import { Button, Grid, makeStyles, Typography, Card, CardActionArea, CardContent } from '@material-ui/core'
+import { Button, Grid, makeStyles, Typography, Card, CardActionArea, CardContent,Dialog, DialogTitle, DialogContent} from '@material-ui/core'
 import sessionApi from '../api/sessionApi'
 import roomApi from '../api/roomApi'
 import cartApi from '../api/cartApi'
 import { UserContext } from '../context/UserContext'
 import moment from 'moment'
 import SpinningCircles from 'react-loading-icons/dist/components/spinning-circles'
+import CloseIcon from '@material-ui/icons/Close';
+import AddSessionForm from '../components/AddSessionForm'
 
 const useStyles = makeStyles({
     loadingindicator: {
@@ -22,19 +24,34 @@ const useStyles = makeStyles({
     selectCard: {
         backgroundColor: "#c577c4"
     },
+    dialogTitle: {
+        paddingRight:'0px'
+    },
 })
 
 const ManageQueue = () => {
     const [isLoading, setIsloading] = useState()
     const [sessionData, setSessionData] = useState([])
     const [filterSessionData, setFilterSessionData] = useState([])
-    const [morningData, setMorningData] = useState([])
-    const [afternoonData, setAfternoonData] = useState([])
     const [roomData, setRoomData] = useState([])
     const [cartData, setCartData] = useState([])
-    const [filterCartData, setFilterCartData] = useState()
+    const [filterCartData, setFilterCartData] = useState([])
     const [selectRoom, setSelectRoom] = useState()
     const [selectSession, setSelectSession] = useState('')
+    const [open, setOpen] = useState(false)
+    const [createSuccess, setCreateSuccess] = useState(1)
+
+    const handleCreateSuccess = useCallback(() =>{
+        setCreateSuccess(createSuccess+1)
+    }, [])
+
+    const handleClose = useCallback((value) =>{
+        setOpen(false)
+    }, [])
+
+    const handleOpen = useCallback((value) => {
+        setOpen(true)
+    },[])
 
     const handleIsLoading = useCallback((value) => {
         setIsloading(value)
@@ -42,14 +59,6 @@ const ManageQueue = () => {
 
     const handleSessionData = useCallback((value) => {
         setSessionData(value)
-    }, [])
-
-    const handleMorningData = useCallback((value) => {
-        setMorningData(value)
-    }, [])
-
-    const handleAfternoonData = useCallback((value) => {
-        setAfternoonData(value)
     }, [])
 
     const handleRoomData = useCallback((value) => {
@@ -68,23 +77,25 @@ const ManageQueue = () => {
         setSelectSession(value)
     }, [])
 
-    const handleCartData = useCallback((value) =>{
+    const handleCartData = useCallback((value) => {
         setCartData(value)
+    }, [])
+
+    const handleFilterCartData = useCallback((value) => {
+        setFilterCartData(value)
     }, [])
 
     useEffect(() => {
         fetchSessionData()
         fetchRoomData()
         fetchCartdata()
-    }, [])
+    }, [createSuccess])
 
     useEffect(() => {
         if (sessionData) {
-            handleMorningData(filterData('morning'))
-            handleAfternoonData(filterData('afternoon'))
             handleIsLoading(true)
         }
-    }, [sessionData, roomData])
+    }, [sessionData, roomData, cartData])
 
     const classes = useStyles()
     const user = useContext(UserContext)
@@ -119,9 +130,9 @@ const ManageQueue = () => {
 
     }
 
-    const fetchCartdata = async () =>{
-        try{
-            const response = await cartData.get('/all-carts', {
+    const fetchCartdata = async () => {
+        try {
+            const response = await cartApi.get('/all-carts', {
                 headers: {
                     Authorization: user?.user?.token
                 }
@@ -134,26 +145,36 @@ const ManageQueue = () => {
         }
     }
 
-    const filterData = (time) => {
-        return sessionData.filter((item) => item.sessionInDay === time)
-    }
-
-    const chooseRoomCard = useCallback((value) => {
+    const chooseRoomCard = (value) => {
         handleSelectRoom(value)
         handleFilterSessionData(sessionData.filter((item) => item.floorId === value.id))
-    }, [roomData])
+    }
 
-    const chooseSessionCard = useCallback((value) => {
+    const chooseSessionCard = (value) => {
+        console.log(value)
         handleSelectSession(value)
-        
-    }, [])
+        handleFilterCartData(cartData.filter((item) => item.sessionId === value.id))
+    }
 
     return (
         <div>
             <Header title={"การจองทั้งหมด"} />
             <Grid container>
-                <Grid item xs={6}><Typography>กรุณาห้องที่ต้องการ</Typography></Grid>
-                <Grid item xs={6}><Button variant="contained">สร้างรอบการจอง</Button></Grid>
+                <Grid item xs={6}><Typography>กรุณาเลือกห้องที่ต้องการ</Typography></Grid>
+                <Grid item xs={6}><Button variant="contained" onClick={handleOpen}><Typography>สร้างรอบการจอง</Typography></Button></Grid>
+                <Dialog open={open}>
+                        <DialogTitle>
+                        <DialogTitle className={classes.dialogTitle}>
+                                    <div style={{display: 'flex'}}>
+                                        <Typography variant="h5" component="div" style={{flexGrow:1}}>เพิ่มรอบการจอง</Typography>
+                                        <Button color="secondary" onClick={handleClose}><CloseIcon/></Button>
+                                    </div>
+                                </DialogTitle>
+                                <DialogContent dividers>
+                                    <AddSessionForm close={handleClose} roomData={roomData} refresh={handleCreateSuccess}/>
+                                </DialogContent>
+                        </DialogTitle>
+                    </Dialog>
             </Grid>
             {isLoading ?
                 <Grid direction="column">
@@ -174,9 +195,9 @@ const ManageQueue = () => {
                     </Grid>
 
 
-                        <Grid item align="center" direction="column">
-                            <Typography>เลือกรอบที่เปิด</Typography>
-                        </Grid>
+                    <Grid item align="center" direction="column">
+                        <Typography>เลือกรอบที่เปิด</Typography>
+                    </Grid>
 
                     <Grid container direction="row" spacing={3} style={{ marginTop: 10 }}>
                         {filterSessionData.map((e) => {
@@ -213,15 +234,33 @@ const ManageQueue = () => {
                         })}
                     </Grid>
 
-                     <Grid item align="center" direction="column">
+                    <Grid item align="center" direction="column">
                         <Typography>การจองทั้งหมด</Typography>
                     </Grid>
 
                     <Grid container direction="row" spacing={3} style={{ marginTop: 10 }}>
-                        
+                        {filterCartData.map((e) => {
+                            return (
+                                <Grid item xs={2}>
+                                    <Card>
+                                        <CardContent>
+                                            <Grid container direction="column">
+                                                <Grid item>
+                                                    <Typography>ชื่อ : {e?.user_docs?.name}</Typography>
+                                                </Grid>
+                                                <Grid item>
+                                                    <Typography>ID : {e?.user_docs?.username}</Typography>
+                                                </Grid>
+                                                <Grid item>
+                                                    <Typography>อาจารย์ : {e?.teacherName}</Typography>
+                                                </Grid>
+                                            </Grid>
+                                        </CardContent>
+                                    </Card>
+                                </Grid>
+                            )
+                        })}
                     </Grid>
-
-
                 </Grid>
                 : <SpinningCircles className={classes.loadingindicator} />}
         </div >
