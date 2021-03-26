@@ -49,6 +49,10 @@ const useStyles = makeStyles({
         backgroundColor: "#663399",
         height: 25
     },
+    cartCard:{
+        minHeight:250,
+        maxWidth:300
+    }
 })
 
 const ManageQueue = () => {
@@ -275,7 +279,7 @@ const ManageQueue = () => {
                         {filterCartData.map((e) => {
                             return (
                                 <Grid item xs={2}>
-                                    <Card>
+                                    <Card className={classes.cartCard}>
                                         <CardHeader className={classes.cardHead}/>
                                         <CardContent>
                                             <Grid container direction="column">
