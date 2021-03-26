@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect, useCallback } from 'react'
 import Header from '../components/Header'
-import { Button, Grid, makeStyles, Typography, Card, CardActionArea, CardContent,Dialog, DialogTitle, DialogContent} from '@material-ui/core'
+import { Button, Grid, makeStyles, Typography, Card, CardActionArea, CardContent,Dialog, DialogTitle, DialogContent, CardHeader} from '@material-ui/core'
 import sessionApi from '../api/sessionApi'
 import roomApi from '../api/roomApi'
 import cartApi from '../api/cartApi'
@@ -9,6 +9,8 @@ import moment from 'moment'
 import SpinningCircles from 'react-loading-icons/dist/components/spinning-circles'
 import CloseIcon from '@material-ui/icons/Close';
 import AddSessionForm from '../components/AddSessionForm'
+import Avatar from '@material-ui/core/Avatar'
+import { yellow } from '@material-ui/core/colors'
 
 
 const useStyles = makeStyles({
@@ -39,6 +41,13 @@ const useStyles = makeStyles({
     },
     descrptiontext: {
         paddingTop: 15,
+    },
+    avatar: {
+        backgroundColor: '#f1b261',
+    },
+    cardHead: {
+        backgroundColor: "#663399",
+        height: 25
     },
 })
 
@@ -224,14 +233,18 @@ const ManageQueue = () => {
                             let textTitle = moment(new Date(e.end))
                             textTitle = textTitle.format('DD/MM/YYYY')
                             let timeInDay = ""
+                            let avatar_char = ""
                             if (e.sessionInDay === 'morning') {
                                 timeInDay = "เช้า (9.30 - 12.30)"
+                                avatar_char = "ช"
                             } else {
                                 timeInDay = "บ่าย (13.30 - 16.30)"
+                                avatar_char = "บ"
                             }
                             return (
-                                <Grid item xs={4} >
+                                <Grid item xs={3} >
                                     <Card className={[classes.card, selectSession === e ? classes.selectCard : null]}>
+                                        <CardHeader avatar={<Avatar aria-label="recipe" className={classes.avatar}>{avatar_char}</Avatar>} className={classes.cardHead}/>
                                         <CardActionArea>
                                             <CardContent onClick={() => chooseSessionCard(e)}>
                                                 <Grid container direction="column" className={selectSession === e ? classes.selectText : null}>
@@ -263,6 +276,7 @@ const ManageQueue = () => {
                             return (
                                 <Grid item xs={2}>
                                     <Card>
+                                        <CardHeader className={classes.cardHead}/>
                                         <CardContent>
                                             <Grid container direction="column">
                                                 <Grid item>
