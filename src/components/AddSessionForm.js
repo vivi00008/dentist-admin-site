@@ -20,6 +20,13 @@ const useStyles = makeStyles(theme => ({
         marginTop: theme.spacing(3),
         textAlign: 'end',
     },
+    formControl: {
+        margin: theme.spacing(1),
+        minWidth: 120,
+        '& .MuiFormLabel-root': {
+            marginLeft: 15,
+        }
+    },
 }))
 
 const AddSessionForm = ({ close, roomData, refresh }) => {
@@ -61,9 +68,10 @@ const AddSessionForm = ({ close, roomData, refresh }) => {
         <div className={classes.root}>
             <Grid container>
                 <Grid item xs={12}>
-                    <FormControl>
+                    <FormControl className={classes.formControl}>
                         <InputLabel id="demo-simple-select-outlined-label">เลือกห้อง</InputLabel>
                         <Select
+                            variant="outlined"
                             labelId="demo-simple-select-outlined-label"
                             id="demo-simple-select-outlined"
                             value={room}
@@ -80,9 +88,10 @@ const AddSessionForm = ({ close, roomData, refresh }) => {
                 </Grid>
 
                 <Grid item xs={12}>
-                    <FormControl>
+                    <FormControl className={classes.formControl}>
                         <InputLabel id="demo-simple-select-outlined-label">เลือกช่วงเวลา</InputLabel>
                         <Select
+                            variant="outlined"
                             labelId="demo-simple-select-outlined-label"
                             id="demo-simple-select-outlined"
                             value={room}

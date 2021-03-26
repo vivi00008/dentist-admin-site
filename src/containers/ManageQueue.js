@@ -10,9 +10,11 @@ import SpinningCircles from 'react-loading-icons/dist/components/spinning-circle
 import CloseIcon from '@material-ui/icons/Close';
 import AddSessionForm from '../components/AddSessionForm'
 
+
 const useStyles = makeStyles({
-    loadingindicator: {
-        alignmentBaseline: 'middle',
+    gridContent: {
+        marginTop: 20,
+        textAlign: 'center'
     },
     card: {
         maxWidth: 345,
@@ -35,10 +37,13 @@ const useStyles = makeStyles({
         marginLeft: 650,
         paddingTop: 300
     },
+    descrptiontext: {
+        paddingTop: 15,
+    },
 })
 
 const ManageQueue = () => {
-    const [isLoading, setIsloading] = useState()
+    const [isLoading, setIsloading] = useState(false)
     const [sessionData, setSessionData] = useState([])
     const [filterSessionData, setFilterSessionData] = useState([])
     const [roomData, setRoomData] = useState([])
@@ -122,6 +127,7 @@ const ManageQueue = () => {
         if (response.data.success) {
             handleSessionData(response.data.message)
         }
+        handleIsLoading(true)
     }
 
     const fetchRoomData = async () => {
@@ -173,9 +179,9 @@ const ManageQueue = () => {
     return (
         <div>
             <Header title={"การจองทั้งหมด"} />
-            <Grid container>
+            <Grid container className={classes.gridContent}>
                 <Grid item xs={6}><Typography>กรุณาเลือกห้องที่ต้องการ</Typography></Grid>
-                <Grid item xs={6}><Button variant="contained" onClick={handleOpen}><Typography>สร้างรอบการจอง</Typography></Button></Grid>
+                <Grid item xs={6}><Button variant="contained" color="primary" onClick={handleOpen}><Typography>สร้างรอบการจอง</Typography></Button></Grid>
                 <Dialog open={open}>
                         <DialogTitle>
                         <DialogTitle className={classes.dialogTitle}>
@@ -210,7 +216,7 @@ const ManageQueue = () => {
 
 
                     {isSelectRoom ? <Grid item align="center" direction="column">
-                        <Typography>เลือกรอบที่เปิด</Typography>
+                        <Typography className={classes.descrptiontext}>เลือกรอบที่เปิด</Typography>
                     </Grid> : null}
 
                     <Grid container direction="row" spacing={3} style={{ marginTop: 10 }}>
@@ -249,7 +255,7 @@ const ManageQueue = () => {
                     </Grid>
 
                     {isSelectSession ? <Grid item align="center" direction="column">
-                        <Typography>การจองทั้งหมด</Typography>
+                        <Typography className={classes.descrptiontext}>การจองทั้งหมด</Typography>
                     </Grid> : null}
 
                     <Grid container direction="row" spacing={3} style={{ marginTop: 10 }}>
@@ -279,7 +285,7 @@ const ManageQueue = () => {
                         })}
                     </Grid>
                 </Grid>
-                : <div>Loading Data</div>}
+                : <SpinningCircles className={classes.loadingindicator}/>}
         </div >
     )
 }
